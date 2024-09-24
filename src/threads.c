@@ -5,6 +5,7 @@
 #include <pico/stdlib.h>
 #include <pico/multicore.h>
 #include <pico/cyw43_arch.h>
+#include "helpers.h"
 
 // Setting the priority of the main task to be 1
 #define MAIN_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
@@ -31,11 +32,14 @@ void side_thread(void *params)
 	while (1) {
         vTaskDelay(100);
 
-        xSemaphoreTake( semaphore, portMAX_DELAY );
-        {
-        counter += counter + 1;
-		printf("hello world from %s! Count %u\n", "thread", counter);
-        }
+        // BaseType_t retStatus =  xSemaphoreTake( semaphore, 500 );
+        // if( retStatus == pdPASS )
+        // {
+        //     counter += counter + 1;
+        //     printf("hello world from %s! Count %u\n", "thread", counter);
+        //     xSemaphoreGive( semaphore );
+        // }
+        side_counter( &counter, semaphore );
 
 	}
 }
@@ -48,9 +52,13 @@ void main_thread(void *params)
 	while (1) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
         vTaskDelay(100);
-        {
-		printf("hello world from %s! Count %u\n", "main", counter++);
-        }
+        // BaseType_t retStatus =  xSemaphoreTake( semaphore, 500 );
+        // if( retStatus == pdPASS )
+        // {
+        //     printf("hello world from %s! Count %u\n", "main", counter++);
+        //     xSemaphoreGive( semaphore );
+        // }
+        main_counter(&counter, semaphore);
         on = !on;
 	}
 }

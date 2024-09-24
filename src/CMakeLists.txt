@@ -1,5 +1,6 @@
 # This is the main binary. List your C files here.
 add_executable(threads
+    helpers.c
     threads.c
     )
 
