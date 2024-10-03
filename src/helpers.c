@@ -56,3 +56,18 @@ void deadlock_two(void* args){
     xSemaphoreGive(dargs->two);
     vTaskSuspend(NULL);
 }
+
+void orphaned_lock(void* args)
+{
+    struct OrphanedArgs* oargs = (struct OrphanedArgs*)args;
+
+    while (1) {
+        xSemaphoreTake(oargs->sem, portMAX_DELAY);
+        oargs->counter++;
+        if (oargs->counter % 2) {
+            continue;
+        }
+        printf("Count %d\n", oargs->counter);
+        xSemaphoreGive(&oargs->sem);
+    }
+}

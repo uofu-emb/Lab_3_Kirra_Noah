@@ -43,3 +43,5 @@ add_test(NAME simulate_mytest COMMAND
     )
 
 add_custom_target(flash_test picotool load -f $<TARGET_FILE:mytest> DEPENDS mytest)
+
+pico_add_extra_outputs(mytest)
